@@ -1,0 +1,22 @@
+<h1> User Login </h1>
+
+<% if flash[:notice] %>
+    <p><%= flash[:notice] %></p>
+<% end %>
+
+<%= form_for(:user, url: 'sessions/create') do |f| %>
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name, class: 'form_control' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password, class: 'form_control'%>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Login" %>
+    </div>
+<% end %>
+<p>New user? <%= link_to "Sign up now!", '/signup' %></p>

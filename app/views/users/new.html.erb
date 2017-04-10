@@ -1,0 +1,38 @@
+<h1> Create New Account </h1>
+<% if @user.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% @user.errors.messages.each do |attribute,msg| %>
+            <% msg.each do |m|%>
+                <li><%= "#{attribute} - #{m}"  %></li>
+            <% end %>
+        <% end %>
+      </ul>
+    </div>
+<%end%>
+<%= simple_form_for @user, as: :user, url: '/signup' do |f| %>
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= f.label :phoneNum, 'Phone Number' %><br />
+      <%= f.text_field :phoneNum %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation %>
+    </div>
+
+    <div class="actions"><%= f.submit "Sign Up" %></div>
+
+<% end %>
+
+

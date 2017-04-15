@@ -5,7 +5,10 @@ Rails.application.routes.draw do
 
   #post '/listings/show', to: 'listings#show'
 
-  get 'listings/create'
+  get  'apartments', to: 'listings#new'
+  post 'apartments', to: 'listings#create'
+
+  get '/listings/index'
 
   get 'listings/delete'
 
@@ -37,8 +40,6 @@ Rails.application.routes.draw do
   #post 'users', :to => 'users#create'
 
   #get 'users', :to => 'users#create'
-
-
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410065850) do
+ActiveRecord::Schema.define(version: 20170413070016) do
 
   create_table "ckeditor_assets", force: :cascade do |t|
     t.string   "data_file_name",               null: false
@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(version: 20170410065850) do
 
   create_table "images", force: :cascade do |t|
     t.string   "image_url"
-    t.integer  "listings_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["listings_id"], name: "index_images_on_listings_id"
+    t.integer  "listing_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_images_on_listing_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -37,11 +37,22 @@ ActiveRecord::Schema.define(version: 20170410065850) do
     t.string   "streetname"
     t.string   "city"
     t.string   "zipcode"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "status"
-    t.decimal  "latitude",   precision: 10, scale: 6
-    t.decimal  "longitude",  precision: 10, scale: 6
+    t.decimal  "latitude",      precision: 10, scale: 6
+    t.decimal  "longitude",     precision: 10, scale: 6
+    t.integer  "streetnum"
+    t.string   "country"
+    t.string   "state"
+    t.text     "property_desc"
+    t.string   "property_type"
+    t.integer  "sq_ft"
+    t.string   "bedrooms"
+    t.string   "bathrooms"
+    t.string   "pets"
+    t.string   "leasing_fees"
+    t.integer  "unit_num"
   end
 
   create_table "posts", force: :cascade do |t|

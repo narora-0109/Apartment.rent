@@ -1,4 +1,4 @@
-class ChangeColumnName < ActiveRecord::Migration[5.0]
+class ChangeColumnName < ActiveRecord::Migration
   def change
     rename_column :images, :description, :image_url
   end

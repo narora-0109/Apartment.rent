@@ -3,9 +3,8 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @listings = Picture.all
-    m = "manu"
-    #render :json => @listings.as_json
+    @listings = Listing.all
+    render :json => @listings.as_json
     #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end
 

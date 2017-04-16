@@ -3,22 +3,25 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @listings = Listing.all
-    render :json => @listings.as_json
+    @listings = Picture.all
+    m = "manu"
+    #render :json => @listings.as_json
     #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end
 
   def new
     @listing = Listing.new
+    #@picture = @listing.pictures.new
   end
 
   def create
     @listing = Listing.new(listing_params)
       if @listing.save
-        #session[:name] = @user.name
-        flash[:notice] = "Listing added successfully!"
-        #redirect_to action: 'show'
-        redirect_to 'apartments'
+        params[:listing]['pictures'].each do |file|
+          @listing.pictures.create!(:picture_json => file)
+        end
+          flash[:notice] = "Listing added successfully!"
+          redirect_to 'apartments'
       else
         flash[:alert] = "Error creating Listing!"
         render :new
@@ -47,6 +50,7 @@ class ListingsController < ApplicationController
   private
 
   def listing_params
-    params.require(:listing).permit(:unitnum,:streetnum, :streetname,:city,:state,:country,:zipcode, :price,:latitude,:longitude,:property_desc,:property_type, :sq_ft,:bedrooms, :bathrooms, :pets,:leasing_fees)
+    params.require(:listing).permit(:unit_num,:streetnum,:streetname,:city,:state,:country,:zipcode,:price,:latitude,:longitude,:property_desc,:property_type, :sq_ft,:bedrooms, :bathrooms, :pets,:leasing_fees, :picture_json)
   end
+
 end

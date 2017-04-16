@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413070016) do
+ActiveRecord::Schema.define(version: 20170416031321) do
 
   create_table "ckeditor_assets", force: :cascade do |t|
     t.string   "data_file_name",               null: false
@@ -22,14 +22,6 @@ ActiveRecord::Schema.define(version: 20170413070016) do
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.index ["type"], name: "index_ckeditor_assets_on_type"
-  end
-
-  create_table "images", force: :cascade do |t|
-    t.string   "image_url"
-    t.integer  "listing_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["listing_id"], name: "index_images_on_listing_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -55,11 +47,12 @@ ActiveRecord::Schema.define(version: 20170413070016) do
     t.integer  "unit_num"
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string   "title"
-    t.text     "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "pictures", force: :cascade do |t|
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "listing_id"
+    t.string   "picture_json"
+    t.index ["listing_id"], name: "index_pictures_on_listing_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -22,7 +22,7 @@
     </div>
 
 
-<%= simple_form_for @listing, as: :listing, url: '/apartments', wrapper: :inline_form, html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for @listing, as: :listing, url: '/apartments', wrapper: :inline_form, html: { class: 'form-inline', :multipart => true } do |f| %>
       <div class='row'>
           <div class='col-sm-3'>
             <div class='form-group'>
@@ -100,8 +100,8 @@
         </div>
       </div>
       <div class="field">
-        <%= f.label :image, 'Property Images' %><br>
-        <%= f.file_field :image_url %>
+        <%= f.label :pictures, 'Property Images' %><br>
+        <%= f.file_field :pictures, multiple: true %>
       </div>
 
 

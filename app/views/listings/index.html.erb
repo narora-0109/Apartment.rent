@@ -247,7 +247,7 @@
   <script id ="properties-listing" type="text/x-handlebars-template">
     {{#each data}}
     <li onmouseover="javascript:showme({{@index}});" onmouseout="javascript:showme({{@index}});">
-      <img class="someClass" src="{{images.0.image_url}}"
+      <img class="someClass" src="{{images[0]}}"
            width = "200" height="130" style="padding: 0 10px 10px 0" />
       <div id="price">${{price}}</div>
       <div id="listing-text1">{{streetname}}</div>

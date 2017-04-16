@@ -5,12 +5,18 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'yaml_db'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use sqlite3 as the database for Active Record
-gem 'mysql2', '~> 0.3.16'
+group :production, :development, :test do
+  gem 'mysql2', '~> 0.3.16'
+end
 
-gem 'sqlite3'
+#group :development, :test do
+#gem 'sqlite3'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets

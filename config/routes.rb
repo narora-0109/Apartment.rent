@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  root :to => 'sessions#show'
+  root 'listings#index'
+
+  #root :to => 'sessions#show'
 
   get '/listings/show', to: 'listings#show'
 
@@ -8,19 +10,18 @@ Rails.application.routes.draw do
   get  'apartments', to: 'listings#new'
   post 'apartments', to: 'listings#create'
 
-  get '/listings/index'
+  get 'listings/index'
 
   get 'listings/delete'
 
   get '/users/show', to: 'users#show'
 
   get 'users/index', to: 'users#index'
-  mount Ckeditor::Engine => '/ckeditor'
-  resources :posts
   
   get  '/signup',  to: 'users#new'
   post '/signup',  to: 'users#create'
 
+  #resources :listings
   resources :users
 
   get 'posts/create'

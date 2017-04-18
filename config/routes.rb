@@ -5,8 +5,11 @@ Rails.application.routes.draw do
 
   get '/listings/show', to: 'listings#show'
 
+  delete '/listings/delete/:id', to: 'listings#delete'
   #post '/listings/show', to: 'listings#show'
 
+  #get 'listings/:id', to: 'listings#update'
+  #put 'listings/:id', to: 'listings#update'
   get  'apartments', to: 'listings#new'
   post 'apartments', to: 'listings#create'
 

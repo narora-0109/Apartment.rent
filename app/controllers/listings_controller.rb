@@ -6,7 +6,7 @@ class ListingsController < ApplicationController
 
   def show
     #@listings = Listing.find_by_city('Union City')
-    @listings = Listing.all
+    @listings = Listing.where(city: params[:city],state: params[:state])
     render :json => @listings.as_json
     #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end
@@ -34,21 +34,21 @@ class ListingsController < ApplicationController
     @listing = Listing.find_by(params[:id])
     if @listing.destroy
       flash[:notice] = "Listing deleted successfully!"
-      redirect_to root
+      redirect_to 'listings/delete'
     else
       flash[:alert] = "Error deleting listing!"
     end
   end
 
   def update
-    @listing = Listing.find_by(params[:id])
-    if @listing.update_attributes(listing_params)
-    flash[:notice] = "Listing updated successfully!"
-    redirect_to root
-    else
-    flash[:alert] = "Error updating listing!"
-    render :update
-    end
+    #@listing = Listing.find_by(params[:id])
+    #if @listing.update(unit_num: params[:unit_num], streetname: params[:streetname], streetnum: params[:streetnum])
+    #flash[:notice] = "Listing updated successfully!"
+    #redirect_to root
+    #else
+    #flash[:alert] = "Error updating listing!"
+    #render :update
+    #end
   end
 
   private

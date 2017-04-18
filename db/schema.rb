@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170416215708) do
+ActiveRecord::Schema.define(version: 20170418060306) do
 
   create_table "listings", force: :cascade do |t|
     t.float    "price"
     t.string   "streetname"
     t.string   "city"
     t.string   "zipcode"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.string   "status"
-    t.decimal  "latitude",      precision: 10, scale: 6
-    t.decimal  "longitude",     precision: 10, scale: 6
+    t.string   "latitude"
+    t.string   "longitude"
     t.integer  "streetnum"
     t.string   "country"
     t.string   "state"

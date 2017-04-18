@@ -20,6 +20,8 @@
   <!-- load handlebars.js from cdn, this is used for js templating-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.js"></script>
 
+  <script src="https://use.fontawesome.com/44e70c01df.js"></script>
+
   <style>
     html, body {
       height: 100%;
@@ -100,6 +102,23 @@
       top: 50px;
       bottom: 0;
       overflow: hidden;
+    }
+
+    .listings-grid__attrs {
+      margin: 0;
+      list-style: none;
+      padding: 13px 12px 13px 18px;
+      border-top: 1px solid rgba(0,0,0,.04);
+    }
+
+    .listings-grid__attrs>li {
+      display: inline-block;
+      vertical-align: top;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: #828282;
+      margin-right: 13px;
     }
 
     .label-grey-100 {
@@ -190,7 +209,26 @@
   var properties = [];
 
   function initialize() {
-      $.getJSON('/listings/show', function (json) {
+      // check if filter's search box has no value then detect users location based on his ipaddress
+      var searchBox = $("#search").val();
+      if ($.trim(searchBox).length == 0) {
+          $.get("http://ipinfo.io", function (response) {
+              city = response.city + ", " +response.region;
+              if (typeof city === 'undefined' || city.length == 0) {
+                  city = "San Francisco, ca";
+              }
+              getListings(city);
+          }, "jsonp");
+      }
+  }
+
+  function getListings(city) {
+      if (typeof city === 'undefined' || city.length == 0) {
+          city = "San Francisco, ca";
+      }
+
+      $.getJSON('/listings/show?city='+city.split(',')[0]+"&state="+city.split(', ')[1], function (json) {
+
           // creating deep copy of returned jsonq
           properties = JSON.parse(JSON.stringify(json));
 
@@ -205,6 +243,7 @@
           map = new google.maps.Map(document.getElementById('map-canvas'), {
               mapTypeId: google.maps.MapTypeId.ROADMAP
           });
+
 
           // markers will be shown on map for these coordinates
           var bounds = new google.maps.LatLngBounds();
@@ -259,8 +298,35 @@
               markers.push(marker);
               bounds.extend(marker.position);
           });
-          // position the map so that all markers are visible
+          // position the map so that all markers are visible (only when search box is not empty)
           map.fitBounds(bounds);
+
+          // if search box is empty when map is initialized, we should set the center of the map as below
+          var searchBox = $("#search");
+          if ($.trim(searchBox.val()).length == 0) {
+              searchBox.val(city);
+              var geocoder =  new google.maps.Geocoder();
+              geocoder.geocode( { 'address': city}, function(results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                      initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                      map.setCenter(initialLocation);
+                  } else {
+                      console.log("Something went wrong while trying to get lat lon for city - " + city + " status - " + status);
+                      geocoder.geocode( { 'address': 'San Francisco, CA'}, function(results, status) {
+                          if (status == google.maps.GeocoderStatus.OK) {
+                              initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                              map.setCenter(initialLocation);
+                          } else {
+                              console.log("Something went wrong while trying to get lat lon for San Francisco also - " + status);
+                          }
+                      })
+                  }
+                  map.fitBounds(results[0].geometry.viewport);
+              });
+          }
+
+
+
       });
   }
 
@@ -319,7 +385,7 @@
     <div class="col-xs-10 col-sm-10 col-md-3 col-lg-3" id="left" style="padding-left: 0px;">
       <div class="col-xs-1 col-sm-1 hidden-md hidden-lg"></div>
       <div id="sidebar">
-        <ul class="list-group">
+        <ul class="list-group" style="margin: 3px;">
           <li class="list-group-item">
             <form>
               <div class="form-group" style="display:inline;">
@@ -382,7 +448,7 @@
                       </div>
                     </form>
                   </div>
-                  <input type="text" class="form-control" placeholder="Search using Zip/City/Address">
+                  <input type="text" id="search" class="form-control" placeholder="Search using Zip/City/Address">
                   <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span> </span>
                 </div>
               </div>
@@ -420,11 +486,8 @@
     <li class="list-group-item" onmouseover="showme({{@index}})" onmouseout="showme({{@index}})">
       <div class="panel panel-default relative" style="margin-bottom: 10px; zoom: 1; opacity: 1;">
         <div class="cover hover overlay margin-none" style="min-height: 139px;">
-          <img src= "{{pictures.0.picture_json.thumb.url}}" class="img-responsive" style="width: 100%; height: auto; display: block; margin-left: auto; margin-right: auto;">
-          <a href="property.html" class="overlay overlay-full overlay-bg-black overlay-hover" style="min-height: 120px;">
-            <span class="v-center">
-          <span class="btn btn-circle btn-white"><i class="fa fa-eye"></i></span>
-            </span>
+          <img src= "{{pictures.0.picture_json.url}}" class="img-responsive" style="width: 100%; height: auto; display: block; margin-left: auto; margin-right: auto;">
+          </span>
           </a>
         </div>
         <div class="panel-body">
@@ -432,7 +495,14 @@
           <p>{{city}}</p>
           <span class="label label-grey-100">${{price}}</span>&nbsp;
         </div>
+
+
+        <ul class="listings-grid__attrs">
+          <li><i class="glyphicon glyphicon-bed"></i> {{bedrooms}}</li>
+          <li><i class="fa fa-shower"></i> {{bathrooms}}</li>
+        </ul>
       </div>
+
     </li>
     {{/each}}
   </script>

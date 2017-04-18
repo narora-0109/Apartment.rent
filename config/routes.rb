@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  root 'listings#index'
+  #root 'listings#index'
 
-  #root :to => 'sessions#show'
+  root :to => 'sessions#show'
 
   get '/listings/show', to: 'listings#show'
 

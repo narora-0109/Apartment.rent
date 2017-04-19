@@ -27,12 +27,6 @@ Rails.application.routes.draw do
   #resources :listings
   resources :users
 
-  get 'posts/create'
-
-  get 'posts/update'
-
-  get 'posts/delete'
-
   post 'sessions/create'
 
   get 'sessions/destroy'

@@ -6,7 +6,9 @@ class ListingsController < ApplicationController
 
   def show
     #@listings = Listing.find_by_city('Union City')
-    @listings = Listing.where(city: params[:city].downcase,state: params[:state].downcase)
+    defaults = {:property_type =>"Apartment", :bedrooms => "2", :bathrooms=> "1", :pets => "Yes"}
+    params = defaults.merge(params)
+    @listings = Listing.where(city: params[:city].downcase,state: params[:state].downcase,property_desc: params[:property_desc],bedrooms: params[:bedrooms], bathrooms: params[:bathrooms],pets: params[:pets])
     render :json => @listings.as_json
     #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end

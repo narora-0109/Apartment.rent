@@ -1,21 +1,18 @@
 class ListingsController < ApplicationController
   def index
-    #@listings = Listing.all
-    #render :json => @listings.as_json
+
   end
 
   def show
-    #@listings = Listing.find_by_city('Union City')
-    defaults = {:property_type =>"Apartment", :bedrooms => "2", :bathrooms=> "1", :pets => "Yes"}
-    params = defaults.merge(params)
-    @listings = Listing.where(city: params[:city].downcase,state: params[:state].downcase,property_desc: params[:property_desc],bedrooms: params[:bedrooms], bathrooms: params[:bathrooms],pets: params[:pets])
+    defaults = {'property_type' =>"Apartment", 'bedrooms' => "Studio", 'bathrooms' => "0.5", 'pets' => "Yes", 'city' => "union city", 'state' => 'ca'}
+    copy_params = params
+    params = defaults.merge(copy_params)
+    @listings = Listing.where(:city => params['city'].downcase, :state => params['state'].downcase, bedrooms: params['bedrooms'], bathrooms: params['bathrooms'], pets: params['pets'], property_type: params['property_type'])
     render :json => @listings.as_json
-    #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end
 
   def new
     @listing = Listing.new
-    #@picture = @listing.pictures.new
   end
 
   def create

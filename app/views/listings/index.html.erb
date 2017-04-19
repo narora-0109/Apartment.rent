@@ -22,6 +22,11 @@
 
   <script src="https://use.fontawesome.com/44e70c01df.js"></script>
 
+  <%= javascript_include_tag "map-boundries/relation-in-order.js" %>
+  <%= javascript_include_tag "map-boundries/utility-functions.js" %>
+  <%= javascript_include_tag "map-boundries/google.maps.Polygon.getBounds.js" %>
+  <%= javascript_include_tag "map-boundries/city-boundaries-googlemaps.js" %>
+
   <style>
     html, body {
       height: 100%;
@@ -325,7 +330,7 @@
               });
           }
 
-
+          loadCityLimits();
 
       });
   }
@@ -500,6 +505,7 @@
         <ul class="listings-grid__attrs">
           <li><i class="glyphicon glyphicon-bed"></i> {{bedrooms}}</li>
           <li><i class="fa fa-shower"></i> {{bathrooms}}</li>
+          <li><i class="glyphicon glyphicon-fullscreen"></i> {{sq_ft}} sq ft</li>
         </ul>
       </div>
 

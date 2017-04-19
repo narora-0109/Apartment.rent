@@ -9,3 +9,8 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
+
+Rails.application.config.assets.precompile += %w( map-boundries/relation-in-order.js )
+Rails.application.config.assets.precompile += %w( map-boundries/utility-functions.js )
+Rails.application.config.assets.precompile += %w( map-boundries/google.maps.Polygon.getBounds.js )
+Rails.application.config.assets.precompile += %w( map-boundries/city-boundaries-googlemaps.js )

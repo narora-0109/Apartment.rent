@@ -6,7 +6,7 @@ class ListingsController < ApplicationController
 
   def show
     #@listings = Listing.find_by_city('Union City')
-    @listings = Listing.where(city: params[:city],state: params[:state])
+    @listings = Listing.where(city: params[:city].downcase,state: params[:state].downcase)
     render :json => @listings.as_json
     #render :json => {price: '2200', streetname: 'Arizona Street', city: 'Union City', zipcode: '94587'}
   end
@@ -23,7 +23,7 @@ class ListingsController < ApplicationController
           @listing.pictures.create!(:picture_json => file)
         end
           flash[:notice] = "Listing added successfully!"
-          redirect_to 'apartments'
+          redirect_to '/apartments'
       else
         flash[:alert] = "Error creating Listing!"
         render :new

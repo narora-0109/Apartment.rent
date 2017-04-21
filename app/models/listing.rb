@@ -65,13 +65,11 @@ class Listing < ApplicationRecord
   end
 
   def downcase_fields
-    self.city.downcase!
-    self.state.downcase!
-    self.country.downcase!
-    self.pets.downcase!
-    self.pets.downcase!
-    self.status.downcase!
-    self.property_type.downcase!
+    self.city.downcase! if self.city.present?
+    self.state.downcase! if self.state.present?
+    self.country.downcase! if self.country.present?
+    self.pets.downcase! if self.pets.present?
+    self.property_type.downcase! if self.property_type.present?
   end
 
   def as_json()

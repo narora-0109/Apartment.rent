@@ -4,7 +4,7 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @listings = Listing.by_city(params[:city].downcase).by_state(params[:state].downcase).by_bathroom(params[:bathrooms]).by_price(params[:min_price], params[:max_price]).by_bedrooms(params[:bedrooms]).by_pets(params[:pets])
+    @listings = Listing.by_city(params[:city].downcase).by_state(params[:state].downcase).by_bathroom(params[:bathrooms]).by_price(params[:min_price], params[:max_price]).by_bedrooms(params[:bedrooms]).by_pets(params[:pets].downcase)
     render :json => @listings.as_json
   end
 

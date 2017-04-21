@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418060306) do
+ActiveRecord::Schema.define(version: 20170421053017) do
 
   create_table "listings", force: :cascade do |t|
     t.float    "price"
@@ -28,11 +28,12 @@ ActiveRecord::Schema.define(version: 20170418060306) do
     t.text     "property_desc"
     t.string   "property_type"
     t.integer  "sq_ft"
-    t.string   "bedrooms"
-    t.string   "bathrooms"
+    t.integer  "bedrooms"
+    t.integer  "bathrooms"
     t.string   "pets"
     t.string   "leasing_fees"
     t.integer  "unit_num"
+    t.integer  "user_id"
   end
 
   create_table "pictures", force: :cascade do |t|

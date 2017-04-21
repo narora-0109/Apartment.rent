@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     user=User.find_by(name: params[:user][:name])
     if user && user.authenticate(params[:user][:password])
       session[:name] = user.name
-      redirect_to '/posts/create'
+      redirect_to '/posts/new'
     else
       redirect_to root_url, :notice => 'name or password is not valid!'
     end

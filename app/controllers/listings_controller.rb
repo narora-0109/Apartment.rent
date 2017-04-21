@@ -4,10 +4,7 @@ class ListingsController < ApplicationController
   end
 
   def show
-    defaults = {'property_type' =>"Apartment", 'bedrooms' => "Studio", 'bathrooms' => "0.5", 'pets' => "Yes", 'city' => "union city", 'state' => 'ca'}
-    copy_params = params
-    params = defaults.merge(copy_params)
-    @listings = Listing.where(:city => params['city'].downcase, :state => params['state'].downcase, bedrooms: params['bedrooms'], bathrooms: params['bathrooms'], pets: params['pets'], property_type: params['property_type'])
+    @listings = Listing.by_city(params[:city].downcase).by_state(params[:state].downcase).by_bathroom(params[:bathrooms]).by_price(params[:min_price], params[:max_price]).by_bedrooms(params[:bedrooms]).by_pets(params[:pets])
     render :json => @listings.as_json
   end
 
@@ -30,8 +27,8 @@ class ListingsController < ApplicationController
   end
 
   def delete
-    @listing = Listing.find_by(params[:id])
-    if @listing.destroy
+    @listing = Listing.where(:id => params[:id])
+    if @listing.delete()
       flash[:notice] = "Listing deleted successfully!"
       redirect_to 'listings/delete'
     else

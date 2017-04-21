@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get '/listings/show', to: 'listings#show'
 
-  delete '/listings/delete/:id', to: 'listings#delete'
+  get '/listings/delete/:id', to: 'listings#delete'
   #post '/listings/show', to: 'listings#show'
 
   #get 'listings/:id', to: 'listings#update'
@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   post 'apartments', to: 'listings#create'
 
   get 'listings/index'
+  
+  get 'listings/update'
 
   get 'listings/delete'
 
@@ -26,6 +28,8 @@ Rails.application.routes.draw do
 
   #resources :listings
   resources :users
+
+
 
   post 'sessions/create'
 

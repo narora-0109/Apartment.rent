@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :listings
+
   validates_format_of :name, :with => /\A[^0-9`!@#\$%\^&*+_=]+\z/, :message => "A-Z/a-z are the only allowed characters", :on => :create
   validates_length_of :name, :minimum => 4, :maximum => 15, :message => "Name must be at least 4 characters long and not longer than 15 characters"
   has_secure_password

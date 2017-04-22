@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   def index
+    @listings = Listing.where(:user_id => session[:id])
   end
 
   def show

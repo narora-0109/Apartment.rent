@@ -121,7 +121,7 @@
     </div>
 
 
-<%= simple_form_for @listing, as: :listing, url: '/apartments', wrapper: :inline_form, html: { class: 'form-inline', :multipart => true } do |f| %>
+<%= simple_form_for @listing, as: :listing, url: '/listings/create', wrapper: :inline_form, html: { class: 'form-inline', :multipart => true } do |f| %>
       <div class='row'>
           <div class='col-sm-3'>
             <div class='form-group'>
@@ -277,8 +277,12 @@
         <div class='col-sm-3'>
           <div class='form-group'>
             <%= f.label :leasing_fees, 'Leasing Fees' %><br />
-            <%= f.radio_button :leasing_fees, 0, label: "Yes", checked: true%>
-            <%= f.radio_button :leasing_fees, 1, label: "No"%>
+
+            <%= f.radio_button :leasing_fees, 1 %>
+            <%= f.label :leasing_fees, 'Yes' %>
+
+            <%= f.radio_button :leasing_fees, 0 %>
+            <%= f.label :leasing_fees, 'No' %>
           </div>
         </div>
 

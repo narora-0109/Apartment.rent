@@ -1,0 +1,11 @@
+<%= link_to "logout", sessions_destroy_path %>
+<br />
+<% for listing in @listings do %>
+  <br />
+  Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
+  <%= link_to "update", listings_update_path(:id => listing.id) %> |
+  <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
+  <br />
+<% end %>
+
+

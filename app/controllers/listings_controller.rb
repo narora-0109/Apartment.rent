@@ -1,4 +1,7 @@
 class ListingsController < ApplicationController
+  before_action :authorize, except: [:show, :index]
+
+
   def index
 
   end
@@ -14,12 +17,13 @@ class ListingsController < ApplicationController
 
   def create
     @listing = Listing.new(listing_params)
+    @listing.user_id = session[:id]
       if @listing.save
         params[:listing]['pictures'].each do |file|
           @listing.pictures.create!(:picture_json => file)
         end
           flash[:notice] = "Listing added successfully!"
-          redirect_to '/apartments'
+          render :create
       else
         flash[:alert] = "Error creating Listing!"
         render :new
@@ -27,24 +31,26 @@ class ListingsController < ApplicationController
   end
 
   def delete
-    @listing = Listing.where(:id => params[:id])
-    if @listing.delete()
+
+    if Listing.find(params[:id]).destroy
       flash[:notice] = "Listing deleted successfully!"
-      redirect_to 'listings/delete'
+      redirect_to '/users/index'
     else
       flash[:alert] = "Error deleting listing!"
     end
   end
 
   def update
-    #@listing = Listing.find_by(params[:id])
-    #if @listing.update(unit_num: params[:unit_num], streetname: params[:streetname], streetnum: params[:streetnum])
-    #flash[:notice] = "Listing updated successfully!"
-    #redirect_to root
-    #else
-    #flash[:alert] = "Error updating listing!"
-    #render :update
-    #end
+    if (params[:id].present?)
+      @listing = Listing.find(params[:id])
+    else
+      @listing = Listing.find(params[:listing][:id])
+      if @listing.update_attributes(listing_params)
+        redirect_to '/users/index'
+      else
+        render 'update'
+      end
+    end
   end
 
   private

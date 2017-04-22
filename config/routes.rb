@@ -10,12 +10,17 @@ Rails.application.routes.draw do
 
   #get 'listings/:id', to: 'listings#update'
   #put 'listings/:id', to: 'listings#update'
-  get  'apartments', to: 'listings#new'
-  post 'apartments', to: 'listings#create'
 
+  #get  'apartments', to: 'listings#new'
+  #post 'apartments', to: 'listings#create'
+
+  get 'listings/new'
+  post 'listings/create'
+  
   get 'listings/index'
   
   get 'listings/update'
+  patch 'listings/update'
 
   get 'listings/delete'
 

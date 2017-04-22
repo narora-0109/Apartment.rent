@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+
   has_many :listings
 
   validates_format_of :name, :with => /\A[^0-9`!@#\$%\^&*+_=]+\z/, :message => "A-Z/a-z are the only allowed characters", :on => :create

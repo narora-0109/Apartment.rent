@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   #post 'apartments', to: 'listings#create'
 
   get 'listings/new'
-  post 'listings/create'
+  post 'listings/create', to: 'listings#create'
   
   get 'listings/index'
   
@@ -46,7 +46,6 @@ Rails.application.routes.draw do
   get 'sessions/destroy'
 
   #get 'users/new'
-
 
 
   #post 'users', :to => 'users#create'

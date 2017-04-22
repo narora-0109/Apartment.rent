@@ -25,7 +25,7 @@ class UsersController < ApplicationController
         #@user.error.messages.push("Please verify your email address to continue")
         redirect_to root_url, :notice => "Please verify your email address to continue"
       else
-        redirect_to root_url
+        render 'new'
       end
     end
   end

@@ -71,6 +71,7 @@ gem 'carrierwave', '~> 0.10.0'
 gem 'mini_magick', '~> 4.3'
 gem 'fog', require: 'fog/aws'
 
+# for securing the access keys
 gem 'figaro'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -1,11 +1,46 @@
-<%= link_to "logout", sessions_destroy_path %>
-<br />
-<% for listing in @listings do %>
-  <br />
-  Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
-  <%= link_to "update", listings_update_path(:id => listing.id) %> |
-  <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
-  <br />
-<% end %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>ApartmentSearch</title>
+  <meta name="generator" content="Bootply"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <%= stylesheet_link_tag "custom.css" %>
+</head>
+<body>
+<div class="navbar navbar-custom navbar-fixed-top">
+  <div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartment Search</a>
+    <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </a>
+  </div>
+  <li class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/listings/new">Add a Listing</a></li>
+      <li><a href="/users/index">Manage Listings</a></li>
+    </ul>
 
+    <ul style="float: right; padding-right: 40px;" class="nav navbar-nav">
+    <li><%= link_to "Logout", sessions_destroy_path %></li>
+    </ul>
+  </div>
+</div>
+<div class="container">
+
+  <h1> Your Listings </h1>
+
+  <% for listing in @listings do %>
+    <br />
+    Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
+    <%= link_to "update", listings_update_path(:id => listing.id) %> |
+    <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
+    <br />
+  <% end %>
+</div>
+</body>
+</html>
 

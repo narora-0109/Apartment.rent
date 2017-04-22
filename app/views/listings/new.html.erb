@@ -9,15 +9,8 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCn08ZfcJ6WvhUEzB-SUICMYcFxrEF6-V8&libraries=places&callback=initAutocomplete" async defer> </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCn08ZfcJ6WvhUEzB-SUICMYcFxrEF6-V8&libraries=places&callback=initAutocomplete" async defer> </script>
   <script>
-      // This example displays an address form, using the autocomplete feature
-      // of the Google Places API to help users fill in the information.
-
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
       var placeSearch, autocomplete;
       var componentForm = {
           route: 'long_name',
@@ -93,10 +86,30 @@
           }
       }
   </script>
-
+  <%= stylesheet_link_tag "custom.css" %>
 
 </head>
 <body>
+<div class="navbar navbar-custom navbar-fixed-top">
+<div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartment Search</a>
+  <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </a>
+</div>
+<div class="navbar-collapse collapse">
+  <ul class="nav navbar-nav">
+    <li class="active"><a href="/listings/new">Add a Listing</a></li>
+    <li><a href="/users/index">Manage Listings</a></li>
+  </ul>
+  <ul style="float: right; padding-right: 40px;" class="nav navbar-nav">
+    <li><%= link_to "Logout", sessions_destroy_path %></li>
+  </ul>
+
+</div>
+</div>
+
 <div class="container">
 <h1> Create New Listing </h1>
 <% if @listing.errors.any? %>
@@ -114,7 +127,8 @@
     <div style="padding: 2px;" class='col-sm-12'>
       <div class='form-group'>
         <div id="locationField" class="field">
-          <input id="autocomplete" placeholder="Enter your listing address"
+          <div style="padding-bottom: 5px; font-weight: 700">Address Lookup</div>
+          <input type="text" size="105" id="autocomplete" placeholder="Search for an address"
                  onFocus="geolocate()" type="text"></input>
         </div>
       </div>
@@ -207,11 +221,6 @@
         <div class='col-sm-12'>
         </div>
       </div>
-        <div class='row'>
-          <div class='col-sm-12'>
-            <h4>Property Details</h4>
-          </div>
-        </div>
 
       <div class='row'>
         <div class='col-sm-3'>
@@ -228,17 +237,6 @@
             <div class="field">
               <%= f.label :property_type, 'Property Type' %><br />
               <%= f.select :property_type,['Apartment','Condo','Single Family Home','Room','Mobile Home','Houseboat','Loft'] %>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class='row'>
-        <div class='col-sm-12'>
-          <div class='form-group'>
-            <div class="field">
-              <%= f.label :property_desc, 'Property Description' %><br />
-              <%= f.text_area :property_desc %>
             </div>
           </div>
         </div>
@@ -273,16 +271,16 @@
         </div>
       </div>
 
-      <div class='row'>
+      <div class='row' style="padding-top: 20px;">
         <div class='col-sm-3'>
           <div class='form-group'>
             <%= f.label :leasing_fees, 'Leasing Fees' %><br />
 
             <%= f.radio_button :leasing_fees, 1 %>
-            <%= f.label :leasing_fees, 'Yes' %>
+            <%= f.label :leasing_fees, 'Yes |' %>
 
             <%= f.radio_button :leasing_fees, 0 %>
-            <%= f.label :leasing_fees, 'No' %>
+            <%= f.label :leasing_fees, ' No' %>
           </div>
         </div>
 
@@ -296,18 +294,23 @@
         </div>
       </div>
 
-    <div>
       <%= f.hidden_field :latitude %>
-    </div>
-
-    <div>
       <%= f.hidden_field :longitude %>
-    </div>
 
+      <div class='row'>
+        <div class='col-sm-12'>
+          <div class='form-group'>
+            <div class="field">
+              <%= f.label :property_desc, 'Property Description' %><br />
+              <%= f.text_area :property_desc %>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <br/>
     <div class="actions"><%= f.submit "Create Listing" %></div>
-
+    <br />
 <% end %>
 </div>
 

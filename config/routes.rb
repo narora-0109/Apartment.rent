@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   #root 'listings#index'
-
   root :to => 'sessions#show'
 
   get '/listings/show', to: 'listings#show'
@@ -22,6 +21,14 @@ Rails.application.routes.draw do
   get 'listings/update'
   patch 'listings/update'
 
+  get 'users/login'
+
+  resources :users do
+    member do
+      get :confirm_email
+    end
+  end
+
   get 'listings/delete'
 
   get '/users/show', to: 'users#show'
@@ -32,7 +39,7 @@ Rails.application.routes.draw do
   post '/signup',  to: 'users#create'
 
   #resources :listings
-  resources :users
+  #resources :users
 
   post 'sessions/create'
 
@@ -40,7 +47,7 @@ Rails.application.routes.draw do
 
   #get 'users/new'
 
-  get 'users/login'
+
 
   #post 'users', :to => 'users#create'
 

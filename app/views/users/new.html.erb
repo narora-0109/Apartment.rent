@@ -21,7 +21,7 @@
   <li class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
       <li class="active"><a href="/listings/new">Add a Listing</a></li>
-      <li><a href="/users/index">Manage Listings</a></li>
+      <li><a href="/users">Manage Listings</a></li>
     </ul>
 </div>
 </div>
@@ -49,13 +49,20 @@
           <%= f.text_field :phoneNum %>
         </div>
         <br />
+        <br />
         <div class="field">
-          <%= f.label :password %><br />
+          <%= f.label :email, 'Email Address' %><br />
+          <%= f.text_field :email %>
+        </div>
+        <br />
+
+        <div class="field">
+          <%= f.label :password, 'Enter Password' %><br />
           <%= f.password_field :password %>
         </div>
         <br />
         <div class="field">
-          <%= f.label :password_confirmation %><br />
+          <%= f.label :password_confirmation, 'Retype Password' %><br />
           <%= f.password_field :password_confirmation %>
         </div>
         <br />

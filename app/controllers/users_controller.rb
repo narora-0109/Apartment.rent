@@ -16,16 +16,31 @@ class UsersController < ApplicationController
   def create
     @user = User.new(allowed_params)
     if @user.save
-      redirect_to action: 'index'
+      UserMailer.registration_confirmation(@user).deliver
+      #@user.error.messages.push("Please verify your email address to continue")
+      redirect_to root_url, :notice => "Please verify your email address to continue"
     else
-      render 'new'
+      redirect_to root_url
+    end
+  end
+
+  def confirm_email
+    user = User.find_by_confirm_token(params[:id])
+    if user
+      user.email_activate
+      #@user.error.messages.push("Welcome to the ApartmentFinder! Your email has been confirmed. Please sign in to continue.")
+      redirect_to root_url, :notice => "Welcome to the ApartmentFinder! Your email has been confirmed. Please sign in to continue."
+    else
+      #@user.error.messages.push("Sorry. User does not exist")
+      redirect_to root_url, :notice => "Sorry, user does not exist."
     end
   end
 
   private
 
    def allowed_params
-    params.require(:user).permit(:name, :phoneNum, :password, :password_confirmation)
+    params.require(:user).permit(:name, :phoneNum, :password, :password_confirmation, :email,:confirm_email, :confirmation_token)
    end
+
 
 end

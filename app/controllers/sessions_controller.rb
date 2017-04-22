@@ -4,11 +4,17 @@ class SessionsController < ApplicationController
   def create
     user=User.find_by(name: params[:user][:name])
     if user && user.authenticate(params[:user][:password])
-      session[:name] = user.name
-      session[:id] = user.id
-      redirect_to '/users/index'
+      if user.email_confirmed
+        session[:name] = user.name
+        session[:id] = user.id
+        redirect_to '/users'
+      else
+        redirect_to root_url, :notice => 'Please activate your account by following the
+        instructions in the account confirmation email you received to proceed'
+      end
     else
-      redirect_to root_url, :notice => 'name or password is not valid!'
+        #flash[:notice] = 'Invalid email/password combination'
+        redirect_to root_url, :notice => 'name or password is not valid!'
     end
   end
 

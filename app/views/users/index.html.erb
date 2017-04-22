@@ -32,13 +32,16 @@
 <div class="container">
 
   <h1> Your Listings </h1>
-
-  <% for listing in @listings do %>
-    <br />
-    Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
-    <%= link_to "update", listings_update_path(:id => listing.id) %> |
-    <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
-    <br />
+  <% if @listings.empty? %>
+      You don't have any listings to manage. <%= link_to "Click Here", listings_new_path %> to add a listing.
+  <%   else %>
+    <% for listing in @listings do %>
+      <br />
+      Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
+      <%= link_to "update", listings_update_path(:id => listing.id) %> |
+      <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
+      <br />
+    <% end %>
   <% end %>
 </div>
 </body>

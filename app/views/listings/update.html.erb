@@ -10,7 +10,6 @@
 
 
   <%= simple_form_for @listing, as: :listing, url: '/listings/update', wrapper: :inline_form, html: { class: 'form-inline', :multipart => true } do |f| %>
-      <%= form_authenticity_token %>
       <!--div class="field">
         <%= f.label :pictures, 'Property Images' %><br>
         <%= f.file_field :pictures, multiple: true %>

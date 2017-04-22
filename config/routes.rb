@@ -29,8 +29,6 @@ Rails.application.routes.draw do
   #resources :listings
   resources :users
 
-
-
   post 'sessions/create'
 
   get 'sessions/destroy'

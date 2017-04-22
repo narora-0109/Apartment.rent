@@ -34,7 +34,7 @@
 
     <%= form_for(:user, url: '/sessions/create') do |f| %>
         <div class="field">
-          <%= f.label :name %><br />
+          <%= f.label :name, 'Username' %><br />
           <%= f.text_field :name, class: 'form_control' %>
         </div>
         <br />

@@ -40,7 +40,7 @@
 
     <%= simple_form_for @user, as: :user, url: '/signup', :method => :post  do |f| %>
         <div class="field">
-          <%= f.label :name %><br />
+          <%= f.label :name, 'Username' %><br />
           <%= f.text_field :name %>
         </div>
         <br />

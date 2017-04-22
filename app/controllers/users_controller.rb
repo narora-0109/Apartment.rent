@@ -14,13 +14,19 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(allowed_params)
-    if @user.save
-      UserMailer.registration_confirmation(@user).deliver
-      #@user.error.messages.push("Please verify your email address to continue")
-      redirect_to root_url, :notice => "Please verify your email address to continue"
+    @checkEmail = User.where(:email => allowed_params[:email])
+    @checkUser = User.where(:name => allowed_params[:name])
+    if !@checkEmail.empty? || !@checkUser.empty?
+      redirect_to root_url, :notice => "user with email address or user name already exists"
     else
-      redirect_to root_url
+      @user = User.new(allowed_params)
+      if @user.save
+        UserMailer.registration_confirmation(@user).deliver
+        #@user.error.messages.push("Please verify your email address to continue")
+        redirect_to root_url, :notice => "Please verify your email address to continue"
+      else
+        redirect_to root_url
+      end
     end
   end
 

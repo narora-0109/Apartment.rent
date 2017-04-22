@@ -35,7 +35,7 @@ class ListingsController < ApplicationController
 
     if Listing.find(params[:id]).destroy
       flash[:notice] = "Listing deleted successfully!"
-      redirect_to '/users/index'
+      redirect_to '/users'
     else
       flash[:alert] = "Error deleting listing!"
     end
@@ -47,7 +47,7 @@ class ListingsController < ApplicationController
     else
       @listing = Listing.find(params[:listing][:id])
       if @listing.update_attributes(listing_params)
-        redirect_to '/users/index'
+        redirect_to '/users'
       else
         render 'update'
       end

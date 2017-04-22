@@ -13,7 +13,6 @@ class SessionsController < ApplicationController
         instructions in the account confirmation email you received to proceed'
       end
     else
-        #flash[:notice] = 'Invalid email/password combination'
         redirect_to root_url, :notice => 'name or password is not valid!'
     end
   end
@@ -25,7 +24,7 @@ class SessionsController < ApplicationController
 
   def show
     if session[:name]!=nil
-      redirect_to '/listings/create'
+      redirect_to '/users'
     end
   end
 

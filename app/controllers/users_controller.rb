@@ -16,7 +16,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(allowed_params)
     if @user.save
-      #session[:name] = @user.name
       redirect_to action: 'index'
     else
       render 'new'

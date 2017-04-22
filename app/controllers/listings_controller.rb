@@ -24,7 +24,7 @@ class ListingsController < ApplicationController
           @listing.pictures.create!(:picture_json => file)
         end
           #flash[:notice] = "Listing added successfully!"
-        redirect_to listings_create_path
+        render :create
       else
         flash[:alert] = "Error creating Listing!"
         render :new

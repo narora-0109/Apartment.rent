@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="navbar navbar-custom navbar-fixed-top">
-  <div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartment Search</a>
+  <div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartments Search</a>
     <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -23,27 +23,30 @@
       <li class="active"><a href="/listings/new">Add a Listing</a></li>
       <li><a href="/users">Manage Listings</a></li>
     </ul>
-
-    <ul style="float: right; padding-right: 40px;" class="nav navbar-nav">
-    <li><%= link_to "Logout", sessions_destroy_path %></li>
-    </ul>
-  </div>
+</div>
 </div>
 <div class="container">
-
-  <h1> Your Listings </h1>
-  <% if @listings.empty? %>
-      You don't have any listings to manage. <%= link_to "Click Here", listings_new_path %> to add a listing.
-  <%   else %>
-    <% for listing in @listings do %>
-      <br />
-       Address - <%=listing.streetnum%> <%=listing.streetname%>, <%=listing.city%>, <%=listing.state %>, <%=listing.zipcode%> |
-      <%= link_to "update", listings_update_path(:id => listing.id) %> |
-      <%= link_to "delete", listings_delete_path(:id => listing.id) %> |
-      <br />
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <br />
+    <% if flash[:notice] %>
+        <p style="color: rgb(255,0,0);"><b><%= flash[:notice] %></b></p>
     <% end %>
-  <% end %>
+    <%= form_for(@user, url: password_reset_path(params[:id])) do |f| %>
+
+        <%= hidden_field_tag :email, @user.email %>
+
+        <%= f.label :password %>
+        <%= f.password_field :password, class: 'form-control' %>
+
+        <%= f.label :password_confirmation, "Confirmation" %>
+        <%= f.password_field :password_confirmation, class: 'form-control' %>
+
+        <br />
+        <%= f.submit "Update password", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
 </div>
 </body>
 </html>
-

@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   #root 'listings#index'
   root :to => 'sessions#show'
 
@@ -44,6 +49,8 @@ Rails.application.routes.draw do
   post 'sessions/create'
 
   get 'sessions/destroy'
+
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   #get 'users/new'
 

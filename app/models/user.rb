@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :reset_token
+  before_save   :downcase_email
   before_create :confirmation_token
   has_many :listings
 
@@ -14,6 +16,22 @@ class User < ApplicationRecord
     save!(:validate => false)
   end
 
+  def create_reset_digest
+    if self.reset_token.blank?
+      self.reset_token = SecureRandom.urlsafe_base64.to_s
+    end
+    update_attribute(:reset_digest,  BCrypt::Password.create(reset_token, cost: 10))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+
   private
   def confirmation_token
     if self.confirm_token.blank?
@@ -21,5 +39,8 @@ class User < ApplicationRecord
     end
   end
 
+  def downcase_email
+    self.email = email.downcase
+  end
 
 end

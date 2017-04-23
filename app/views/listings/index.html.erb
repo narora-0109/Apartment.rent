@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
-  <title>ApartmentSearch</title>
+  <title>Apartments Search</title>
   <meta name="generator" content="Bootply"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -53,21 +53,31 @@
 
   var properties = [];
 
+
+
   $(function() {
       $("#filter_btn").click(function () {
           search();
+          $('#filter_trigger_btn').click();
+      });
+
+      $("#search").keyup(function(event){
+          if(event.keyCode == 13){
+              $("#search_btn_trigger").click();
+          }
       });
   });
 
+
   function search() {
-    var max_price = $("#max-price").val();
-    var min_price = $("#min-price").val();
-    var rooms = $("#rooms").val();
-    var bathrooms = $("#bathrooms").val();
-    var pets = $("#pets").val();
-    var city_state = $("#search").val();
-    getListings(city_state, max_price, min_price, rooms, bathrooms, pets);
-    return false;
+      var max_price = $("#max-price").val();
+      var min_price = $("#min-price").val();
+      var rooms = $("#rooms").val();
+      var bathrooms = $("#bathrooms").val();
+      var pets = $("#pets").val();
+      var city_state = $("#search").val();
+      getListings(city_state, max_price, min_price, rooms, bathrooms, pets);
+      return false;
   }
 
   function initialize() {
@@ -85,10 +95,15 @@
               })
 
           }, "jsonp");
+      } else {
+          getListings(searchBox);
       }
+
   }
 
   function getListings(city, max_price, min_price, bedrooms, bathrooms, pets) {
+      activeNow = undefined;
+      markers = [];
       if (typeof city === 'undefined' || city.length == 0) {
           city = "San Francisco, ca";
       }
@@ -114,110 +129,111 @@
       }
 
       $.getJSON('/listings/show?city='+city.split(',')[0]+"&state="+city.split(', ')[1]+"&pets="+pets+"&bathrooms="+bathrooms+
-              "&bedrooms="+bedrooms+"&max_price="+max_price+"&min_price="+min_price
+          "&bedrooms="+bedrooms+"&max_price="+max_price+"&min_price="+min_price
           , function (json) {
 
-          // creating deep copy of returned jsonq
-          properties = JSON.parse(JSON.stringify(json));
+              // creating deep copy of returned jsonq
+              properties = JSON.parse(JSON.stringify(json));
 
-          var template = $('#properties-listing').html();
-          var context = {
-              data: properties
-          };
-          Handlebars.registerHelper("inc", function (value, options) {
-              return parseInt(value) + 1;
+              var template = $('#properties-listing').html();
+              var context = {
+                  data: properties
+              };
+              Handlebars.registerHelper("inc", function (value, options) {
+                  return parseInt(value) + 1;
+              });
+
+              map = new google.maps.Map(document.getElementById('map-canvas'), {
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+              });
+
+
+              // markers will be shown on map for these coordinates
+              var bounds = new google.maps.LatLngBounds();
+
+              var templateScript = Handlebars.compile(template);
+              var html = templateScript(context);
+
+              // empty property list first
+              $('#property-list ul').empty();
+              $('#property-list ul').append(html);
+
+
+              properties.forEach(function (property, index) {
+                  // to begin with all markers will be in orange color
+                  var marker = new google.maps.Marker({
+                      position: new google.maps.LatLng(properties[index].latitude, properties[index].longitude),
+                      map: map,
+                      icon: orangePinImage
+                  });
+                  // markers will have id corresponding to their position in markers array
+                  marker.set("id", index + 1);
+
+                  // when mouse is over a marker it will turn yellow
+                  google.maps.event.addListener(marker, 'mouseover', function () {
+                      marker.setIcon(yellowPinImage);
+                  });
+
+                  //when the mouse goes out of the marker, it will turn orange if it is not a marker which was clicked on (activeNow)
+                  google.maps.event.addListener(marker, 'mouseout', function () {
+                      if (marker.get("id") != activeNow) {
+                          marker.setIcon(orangePinImage);
+                      }
+                  });
+
+                  // when a marker is clicked the corresponding property in the list will be scrolled to and marked with a blue border
+                  google.maps.event.addListener(marker, 'click', function () {
+                      // inactivate the property and marker activated before the current marker was clicked
+                      if (typeof activeNow != 'undefined') {
+                          markers[activeNow - 1].setIcon(orangePinImage);
+                          $('#property-list li:nth-child(' + markers[activeNow - 1].get("id") + ')').css('outline', '');
+                      }
+                      // scroll to property corresponding to the marker (use jquery for animation)
+                      $('#property-list').animate({
+                          scrollTop: $('#property-list li:nth-child(' + marker.get("id") + ')').position().top - $('#property-list li:first').position().top
+                      }, 'slow');
+
+                      // add blue border
+                      $('#property-list ul').find(".list-group-item-warning").removeClass("list-group-item-warning");
+                      $('#property-list ul li:nth-child(' + marker.get("id") + ')').addClass("list-group-item-warning");
+
+                      activeNow = marker.get("id");
+                  });
+
+                  markers.push(marker);
+                  bounds.extend(marker.position);
+              });
+              // position the map so that all markers are visible (only when search box is not empty)
+              map.fitBounds(bounds);
+
+              // if search box is empty when map is initialized, we should set the center of the map as below
+              var searchBox = $("#search");
+              if ($.trim(searchBox.val()).length == 0) {
+                  searchBox.val(city);
+
+                  var geocoder =  new google.maps.Geocoder();
+                  geocoder.geocode( { 'address': city}, function(results, status) {
+                      if (status == google.maps.GeocoderStatus.OK) {
+                          initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                          map.setCenter(initialLocation);
+                      } else {
+                          console.log("Something went wrong while trying to get lat lon for city - " + city + " status - " + status);
+                          geocoder.geocode( { 'address': 'San Francisco, CA'}, function(results, status) {
+                              if (status == google.maps.GeocoderStatus.OK) {
+                                  initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                                  map.setCenter(initialLocation);
+                              } else {
+                                  console.log("Something went wrong while trying to get lat lon for San Francisco also - " + status);
+                              }
+                          })
+                      }
+                      map.fitBounds(results[0].geometry.viewport);
+                  });
+              }
+
+              loadCityLimits();
+
           });
-
-          map = new google.maps.Map(document.getElementById('map-canvas'), {
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-
-
-          // markers will be shown on map for these coordinates
-          var bounds = new google.maps.LatLngBounds();
-
-          var templateScript = Handlebars.compile(template);
-          var html = templateScript(context);
-
-          // empty property list first
-          $('#property-list ul').empty();
-          $('#property-list ul').append(html);
-
-
-          properties.forEach(function (property, index) {
-              // to begin with all markers will be in orange color
-              var marker = new google.maps.Marker({
-                  position: new google.maps.LatLng(properties[index].latitude, properties[index].longitude),
-                  map: map,
-                  icon: orangePinImage
-              });
-              // markers will have id corresponding to their position in markers array
-              marker.set("id", index + 1);
-
-              // when mouse is over a marker it will turn yellow
-              google.maps.event.addListener(marker, 'mouseover', function () {
-                  marker.setIcon(yellowPinImage);
-              });
-
-              //when the mouse goes out of the marker, it will turn orange if it is not a marker which was clicked on (activeNow)
-              google.maps.event.addListener(marker, 'mouseout', function () {
-                  if (marker.get("id") != activeNow) {
-                      marker.setIcon(orangePinImage);
-                  }
-              });
-
-              // when a marker is clicked the corresponding property in the list will be scrolled to and marked with a blue border
-              google.maps.event.addListener(marker, 'click', function () {
-                  // inactivate the property and marker activated before the current marker was clicked
-                  if (typeof activeNow != 'undefined') {
-                      markers[activeNow - 1].setIcon(orangePinImage);
-                      $('#property-list li:nth-child(' + markers[activeNow - 1].get("id") + ')').css('outline', '');
-                  }
-                  // scroll to property corresponding to the marker (use jquery for animation)
-                  $('#property-list').animate({
-                      scrollTop: $('#property-list li:nth-child(' + marker.get("id") + ')').position().top - $('#property-list li:first').position().top
-                  }, 'slow');
-
-                  // add blue border
-                  $('#property-list ul').find(".list-group-item-warning").removeClass("list-group-item-warning");
-                  $('#property-list ul li:nth-child(' + marker.get("id") + ')').addClass("list-group-item-warning");
-
-                  activeNow = marker.get("id");
-              });
-
-              markers.push(marker);
-              bounds.extend(marker.position);
-          });
-          // position the map so that all markers are visible (only when search box is not empty)
-          map.fitBounds(bounds);
-
-          // if search box is empty when map is initialized, we should set the center of the map as below
-          var searchBox = $("#search");
-          if ($.trim(searchBox.val()).length == 0) {
-              searchBox.val(city);
-              var geocoder =  new google.maps.Geocoder();
-              geocoder.geocode( { 'address': city}, function(results, status) {
-                  if (status == google.maps.GeocoderStatus.OK) {
-                      initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                      map.setCenter(initialLocation);
-                  } else {
-                      console.log("Something went wrong while trying to get lat lon for city - " + city + " status - " + status);
-                      geocoder.geocode( { 'address': 'San Francisco, CA'}, function(results, status) {
-                          if (status == google.maps.GeocoderStatus.OK) {
-                              initialLocation = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                              map.setCenter(initialLocation);
-                          } else {
-                              console.log("Something went wrong while trying to get lat lon for San Francisco also - " + status);
-                          }
-                      })
-                  }
-                  map.fitBounds(results[0].geometry.viewport);
-              });
-          }
-
-          loadCityLimits();
-
-      });
   }
 
   // call initialize method to load map on window load
@@ -244,6 +260,7 @@
           markers[index].setAnimation(null);
       }
   }
+
   //]]>
 
   </script>
@@ -252,7 +269,7 @@
 <body>
 <!-- begin template -->
 <div class="navbar navbar-custom navbar-fixed-top">
-  <div class="navbar-header"><a class="navbar-brand" href="#">Apartment Search</a>
+  <div class="navbar-header"><a class="navbar-brand" href="#">Apartments Search</a>
     <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -281,56 +298,56 @@
               <div class="form-group" style="display:inline;">
                 <div class="input-group">
                   <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle" id="filter_trigger_btn" data-toggle="dropdown">
                       <span class="glyphicon glyphicon-filter"></span>
                     </button>
 
-                      <div class="dropdown-menu" role="menu">
+                    <div class="dropdown-menu" role="menu">
 
-                        <div class="form-group" style="clear:both; padding-top: 10px;">
-                          <label for="bedrooms">Min Rooms:</label>
-                          <select class="form-control" id="rooms">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4+</option>
-                          </select>
-                        </div>
-                        <div class="form-group" style="clear:both;">
-                          <label for="bathrooms">Min Bathrooms:</label>
-                          <select class="form-control" id="bathrooms">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4+</option>
-                          </select>
-                        </div>
-                        <div class="form-group" style="clear:both;">
-                          <label for="pets">Pets:</label>
-                          <select class="form-control" id="pets">
-                            <option value="Yes" selected="">yes</option>
-                            <option value="No">no</option>
-                          </select>
-                        </div>
+                      <div class="form-group" style="clear:both; padding-top: 10px;">
+                        <label for="bedrooms">Min Rooms:</label>
+                        <select class="form-control" id="rooms">
+                          <option value="0">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4+</option>
+                        </select>
+                      </div>
+                      <div class="form-group" style="clear:both;">
+                        <label for="bathrooms">Min Bathrooms:</label>
+                        <select class="form-control" id="bathrooms">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4+</option>
+                        </select>
+                      </div>
+                      <div class="form-group" style="clear:both;">
+                        <label for="pets">Pets:</label>
+                        <select class="form-control" id="pets">
+                          <option value="Yes" selected="">yes</option>
+                          <option value="No">no</option>
+                        </select>
+                      </div>
 
-                        <div class="form-group" style="clear:both; padding-top: 10px;">
-                          <label for="rent" class="col-sm-4 control-label" style="padding-left: 0px;">Rent
-                            Between:</label>
-                          <div class="col-sm-8">
-                            <input type="text" class="form-control" id="max-price" placeholder="Max" dcvalue="">
-                            <br><br>
-                            <input type="text" class="form-control" id="min-price" placeholder="Min" dcvalue="">
-                          </div>
-                          <div style="clear:both; padding-top: 10px;">
-                            <input type="button" id="filter_btn" class="btn btn-primary btn-block" value="Search" />
-                          </div>
+                      <div class="form-group" style="clear:both; padding-top: 10px;">
+                        <label for="rent" class="col-sm-4 control-label" style="padding-left: 0px;">Rent
+                          Between:</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="max-price" placeholder="Max" dcvalue="">
+                          <br><br>
+                          <input type="text" class="form-control" id="min-price" placeholder="Min" dcvalue="">
+                        </div>
+                        <div style="clear:both; padding-top: 10px;">
+                          <input type="button" id="filter_btn" class="btn btn-primary btn-block" value="Search" />
                         </div>
                       </div>
+                    </div>
 
                   </div>
                   <input type="text" id="search" class="form-control" placeholder="Search using Zip/City/Address">
-                  <div class="input-group-addon" style="cursor: pointer;" onclick="search()"><span class="glyphicon glyphicon-search"></span> </div>
+                  <div class="input-group-addon" id="search_btn_trigger" style="cursor: pointer;" onclick="search()"><span class="glyphicon glyphicon-search"></span> </div>
                 </div>
               </div>
             </form>
@@ -372,8 +389,9 @@
           </a>
         </div>
         <div class="panel-body">
-          <h4>${{price}}</h4>
-          <p>{{streetname}}, {{city}}</p>
+          <h4 class="margin-v-0-5">{{streetname}}</h4>
+          <p>{{city}}</p>
+          <span class="label label-grey-100">${{price}}</span>&nbsp;
         </div>
 
 

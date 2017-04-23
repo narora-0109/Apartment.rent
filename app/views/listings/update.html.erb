@@ -10,24 +10,24 @@
   <%= stylesheet_link_tag "custom.css" %>
 </head>
 <body>
-  <div class="navbar navbar-custom navbar-fixed-top">
-    <div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartment Search</a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/listings/new">Add a Listing</a></li>
-        <li><a href="/users">Manage Listings</a></li>
-      </ul>
-
-    </div>
+<div class="navbar navbar-custom navbar-fixed-top">
+  <div class="navbar-header"><a class="navbar-brand" href="/listings/index">Apartments Search</a>
+    <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </a>
   </div>
+  <div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/listings/new">Add a Listing</a></li>
+      <li><a href="/users/index">Manage Listings</a></li>
+    </ul>
 
-  <div class="container">
+  </div>
+</div>
+
+<div class="container">
 
   <%= simple_form_for @listing, as: :listing, url: '/listings/update', wrapper: :inline_form, html: { class: 'form-inline', :multipart => true } do |f| %>
       <!--div class="field">
@@ -133,7 +133,7 @@
 
       <br/>
       <div class="actions"><%= f.submit "Update Listing" %></div>
-   </div>
-<% end %>
-</body>
+      </div>
+  <% end %>
+  </body>
 </html>
